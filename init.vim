@@ -17,7 +17,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'fatih/vim-go'
-
+Plug 'tpope/vim-surround'
 call plug#end()
 
 " General Setting
@@ -139,4 +139,3 @@ if executable('ag')
 endif
 
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR> :cw <CR>
-
