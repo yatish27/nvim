@@ -5,12 +5,11 @@ Add the folder inside `$HOME/.config`
 
 ## Install
 - Ctags
-```  
+```
   brew install ctags
-```  
-
-- Grip
-```  
-  brew install grip
 ```
 
+- Grip
+```
+  brew install grip
+```
