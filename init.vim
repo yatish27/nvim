@@ -70,6 +70,7 @@ set softtabstop=2
 set autoindent
 set smartindent
 
+set clipboard=unnamed
 let g:auto_save = 1
 
 " Global Keymaps"
@@ -92,7 +93,13 @@ source $HOME/.config/nvim/colors/vividchalk.vim
 let g:ctrlp_max_height = 10
 let g:ctrlp_mruf_max = 500
 
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/.git/*
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
 let g:ctrlp_cmd = 'CtrlP'
 
 map <c-b> :CtrlPBuffer <cr>
@@ -122,20 +129,20 @@ inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 autocmd CompleteDone * pclose!
 
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-if executable('ag')
-  " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor
+ if executable('ag')
+   " Use Ag over Grep
+   set grepprg=ag\ --nogroup\ --nocolor
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
-  "
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-  
-  if !exists(":Ag")
-    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<SPACE>
-  endif
-endif
+   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+   let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
+   "
+   " ag is fast enough that CtrlP doesn't need to cache
+   let g:ctrlp_use_caching = 0
+
+   if !exists(":Ag")
+     command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+     nnoremap \ :Ag<SPACE>
+   endif
+ endif
 
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR> :cw <CR>
