@@ -18,8 +18,30 @@ Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'fatih/vim-go'
 Plug 'tpope/vim-surround'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
+"stuff to ignore when tab completing
+set wildignore=*.o,*.obj,*~
+set wildignore+=*vim/backups*
+set wildignore+=*sass-cache*
+set wildignore+=vendor/rails/**
+set wildignore+=vendor/cache/**
+set wildignore+=*.gem
+set wildignore+=.git/**
+set wildignore+=public/assets/**
+set wildignore+=vendor/**
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=Cellar/**
+set wildignore+=app/assets/images/**
+set wildignore+=_site/**
+set wildignore+=home/.vim/bundle/**
+set wildignore+=pkg/**
+set wildignore+=**/.gitkeep
+set wildignore+=**/.DS_Store
+set wildignore+=**/*.netrw*
+set wildignore+=node_modules/*
 " General Setting
 
 set backspace=2   " Backspace deletes like most programs in insert mode
@@ -34,6 +56,11 @@ set laststatus=2  " Always display the status line
 set autowrite     " Automatically :write before running commands
 set visualbell    " Set visualbell for errors
 set noerrorbells  " No error bells
+
+set foldmethod=indent
+set foldnestmax=10
+set nofoldenable
+set foldlevel=2
 
 syntax on
 
@@ -137,7 +164,7 @@ autocmd CompleteDone * pclose!
    let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
    "
    " ag is fast enough that CtrlP doesn't need to cache
-   let g:ctrlp_use_caching = 0
+   " let g:ctrlp_use_caching = 0
 
    if !exists(":Ag")
      command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
@@ -146,3 +173,7 @@ autocmd CompleteDone * pclose!
  endif
 
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR> :cw <CR>
+
+" Open NERDTree on startup, when no file has been specified
+autocmd VimEnter * if !argc() | NERDTree | endif
+nmap <C-n> :NERDTreeToggle<CR>
