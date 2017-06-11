@@ -5,13 +5,11 @@ Plug 'tpope/vim-markdown'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
 Plug 'JamshedVesuna/vim-markdown-preview' 
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-syntastic/syntastic'
 Plug 'vim-airline/vim-airline'
 Plug 'djoshea/vim-autoread'
 Plug '907th/vim-auto-save'
 Plug 'pangloss/vim-javascript'
-Plug 'rking/ag.vim'
 Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
 Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -19,6 +17,8 @@ Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'fatih/vim-go'
 Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
+Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'junegunn/limelight.vim'
 call plug#end()
 
 "stuff to ignore when tab completing
@@ -116,31 +116,11 @@ let vim_markdown_preview_hotkey='<C-M>'
 
 source $HOME/.config/nvim/colors/vividchalk.vim
 
-" Fuzzy File Finder CtrlP
-let g:ctrlp_max_height = 10
-let g:ctrlp_mruf_max = 500
+" FZF
+nnoremap <c-p> :Files<cr>
+nnoremap <c-b> :Buffers<cr>
+nnoremap <c-d> :BTags<cr>
 
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/.git/*
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
-let g:ctrlp_cmd = 'CtrlP'
-
-map <c-b> :CtrlPBuffer <cr>
-map <c-d> :CtrlPBufTag <cr>
-
-let g:ctrlp_by_filename = 1
-let g:ctrlp_switch_buffer = 'et'
-let g:ctrlp_max_depth = 40 
-let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
-let g:ctrlp_use_caching = 0
-let g:ctrlp_open_new_file = 'et'
-
-map <leader>p :ClearCtrlPCache<cr>:CtrlP<enter>
 
 " Autocomplete deoplete 
 let g:deoplete#enable_at_startup = 1
@@ -155,25 +135,25 @@ inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 autocmd CompleteDone * pclose!
 
+command! -bang -nargs=* Ag
+      \ call fzf#vim#ag(<q-args>,
+      \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+      \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \                 <bang>0)
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
- if executable('ag')
-   " Use Ag over Grep
-   set grepprg=ag\ --nogroup\ --nocolor
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
 
-   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-   let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
-   "
-   " ag is fast enough that CtrlP doesn't need to cache
-   " let g:ctrlp_use_caching = 0
-
-   if !exists(":Ag")
-     command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-     nnoremap \ :Ag<SPACE>
-   endif
- endif
+endif
 
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR> :cw <CR>
 
 " Open NERDTree on startup, when no file has been specified
 autocmd VimEnter * if !argc() | NERDTree | endif
 nmap <C-n> :NERDTreeToggle<CR>
+
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
